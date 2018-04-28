@@ -1,14 +1,18 @@
 {
-    "name": "vinicius/services",
+    "name": "vinicius/clean-architecture",
     "authors": [
         {
             "name": "Vinícius A.",
             "email": "vba321@hotmail.com"
         }
     ],
-    "require": {
-    },
+    "require": {},
     "require-dev": {
         "phpunit/phpunit": "^7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bank\\": "src"
+        }
     }
 }
