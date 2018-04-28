@@ -24,4 +24,14 @@ class Account
 
         $this->currentBalance += $value;
     }
+
+    public function withdraw(float $value) : void
+    {
+
+        if ($value > $this->currentBalance) {
+          throw new   \InvalidArgumentException('The value should be greater than zero');
+        }
+
+        $this->currentBalance -= $value;
+    }
 }
