@@ -5,10 +5,12 @@ namespace Bank;
 class Account
 {
     private $currentBalance;
+    private $transactions;
 
     public function __construct()
     {
         $this->currentBalance = 0; 
+        $this->transactions = [];
     }
 
     public function getCurrentBalance()
@@ -16,22 +18,34 @@ class Account
         return $this->currentBalance; 
     }
 
-    public function deposit(float $value) : void
+    public function deposit(Transaction $transaction) : void
     {
-        if ($value <= 0) {
+        if ($transaction->getValue() <= 0) {
           throw new  \InvalidArgumentException('The value should be greater than zero');
         }
 
-        $this->currentBalance += $value;
+        $this->currentBalance += $transaction->getValue();
+        $this->addTransaction($transaction);
     }
 
-    public function withdraw(float $value) : void
+    private function addTransaction(Transaction $transaction) : void
+    {
+        $this->transactions[] = $transaction;
+    }
+
+    public function withdraw(Transaction $transaction) : void
     {
 
-        if ($value > $this->currentBalance) {
+        if ($transaction->getValue() > $this->currentBalance) {
           throw new   \InvalidArgumentException('The value should be less than the current balance');
         }
 
-        $this->currentBalance -= $value;
+        $this->currentBalance -= $transaction->getValue();
+        $this->addTransaction($transaction);
+    }
+
+    public function getTransactions() : array
+    {
+        return $this->transactions;
     }
 }
