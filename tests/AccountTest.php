@@ -21,6 +21,7 @@ class AccountTest extends TestCase
 
     /**
      * @expectedException InvalidArgumentException
+     * @expectedMessage The value should be greater than zero
      **/
     public function testDepositWhenValueLessThanZeroShouldThrowAnException()
     {
@@ -40,6 +41,7 @@ class AccountTest extends TestCase
 
     /**
      * @expectedException InvalidArgumentException
+     * @expectedMessage The value should be less than the current balance
      **/
     public function testWithDrawWhenPassValueGreatherThanBalanceShouldThrowAnException()
     {

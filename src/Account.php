@@ -19,7 +19,7 @@ class Account
     public function deposit(float $value) : void
     {
         if ($value <= 0) {
-          throw new  \InvalidArgumentException();
+          throw new  \InvalidArgumentException('The value should be greater than zero');
         }
 
         $this->currentBalance += $value;
@@ -29,7 +29,7 @@ class Account
     {
 
         if ($value > $this->currentBalance) {
-          throw new   \InvalidArgumentException('The value should be greater than zero');
+          throw new   \InvalidArgumentException('The value should be less than the current balance');
         }
 
         $this->currentBalance -= $value;
