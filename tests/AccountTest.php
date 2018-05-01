@@ -3,20 +3,27 @@
 use PHPUnit\Framework\TestCase;
 use Bank\Account;
 use Bank\Transaction;
+use Bank\Validator;
 
 class AccountTest extends TestCase
 {
     public function testWhenInitializeANewAccountTheValueShouldBeZero()
     {
-        $account = new Account();
+        $validator = $this->prophesize(Validator::class);
+        $account = new Account($validator->reveal());
         $this->assertEquals(0, $account->getCurrentBalance()); 
     }
 
     public function testDepositShouldSumValueWithCurrentBalance()
     {
-        $account = new Account();
         $transaction = new Transaction(100);
+
+        $validator = $this->prophesize(Validator::class);
+        $validator->isValueGreaterThanZero($transaction)->shouldBeCalled();
+
+        $account = new Account($validator->reveal());
         $account->deposit($transaction);
+
         $this->assertEquals(100, $account->getCurrentBalance()); 
     }
 
@@ -26,16 +33,28 @@ class AccountTest extends TestCase
      **/
     public function testDepositWhenValueLessThanZeroShouldThrowAnException()
     {
-        $account = new Account();
-        $transaction = new Transaction(-10);
-        $account->deposit($transaction);
+        $transaction = $this->prophesize(Transaction::class);
+        $transaction->getValue()->willReturn(-10);
+
+        $validator = new Validator();
+
+        $account = new Account($validator);
+        $account->deposit($transaction->reveal());
     }
 
     public function testWithDrawWhenAccountContainsTheValueShouldSubtractBalance()
     {
-       $account = new Account();
+       $validator = $this->prophesize(Validator::class);
+
        $depositTransaction = new Transaction(100);
+
+       $validator->isValueGreaterThanZero($depositTransaction)->shouldBeCalled();
+
+       $account = new Account($validator->reveal());
+
        $withdrawTransaction = new Transaction(30);
+
+       $validator->hasAccountBalanceEnough($withdrawTransaction, $account)->shouldBeCalled();
 
        $account->deposit($depositTransaction);
        $account->withdraw($withdrawTransaction);
@@ -50,21 +69,27 @@ class AccountTest extends TestCase
      **/
     public function testWithDrawWhenPassValueGreatherThanBalanceShouldThrowAnException()
     {
-        $account = new Account();
-        $transaction = new Transaction(10);
-        $account->withdraw($transaction);
+        $validator = new Validator();
+        $account = new Account($validator);
+
+        $transaction = $this->prophesize(Transaction::class);
+        $transaction->getValue()->willReturn(10);
+
+        $account->withdraw($transaction->reveal());
     }
 
 
     public function testGetTransactionsWhenInitializeAccountShouldBeAnEmptyArray()
     {
-        $account = new Account();
+        $validator = new Validator();
+        $account = new Account($validator);
         $this->assertEquals([], $account->getTransactions());
     }
 
     public function testDepositWhenAfterPassedShouldStoreTransaction()
     {
-        $account = new Account();
+        $validator = $this->prophesize(Validator::class);
+        $account = new Account($validator->reveal());
         $transaction = new Transaction(90);
 
         $account->deposit($transaction);
@@ -75,7 +100,8 @@ class AccountTest extends TestCase
 
     public function testWithDrawWhenAfterPassedShouldStoreTransaction()
     {
-        $account = new Account();
+        $validator = $this->prophesize(Validator::class);
+        $account = new Account($validator->reveal());
         $depositTransaction = new Transaction(100);
         $withdrawTransaction = new Transaction(90);
 
@@ -89,12 +115,14 @@ class AccountTest extends TestCase
 
     public function testTransferWhenAnAccountHasSufficientMoneyShouldTransferToOtherAccount()
     {
-        $account1 = new Account();
+        $validator = $this->prophesize(Validator::class);
+
+        $account1 = new Account($validator->reveal());
         $depositTransaction = new Transaction(100);
 
         $account1->deposit($depositTransaction);
 
-        $account2 = new Account();
+        $account2 = new Account($validator->reveal());
 
         $transferTransaction = new Transaction(60);
 
@@ -107,16 +135,18 @@ class AccountTest extends TestCase
 
     /**
      * @expectedException InvalidArgumentException
-     * @expectedMessage    The value should be less than the current balance
+     * @expectedMessage The value should be less than the current balance
      **/
     public function testTransferWhenAnAccountHasNotSufficientMoneyShouldThrowAnException()
     {
-        $account1 = new Account();
+        $validator = new Validator();
+
+        $account1 = new Account($validator);
         $depositTransaction = new Transaction(10);
 
         $account1->deposit($depositTransaction);
 
-        $account2 = new Account();
+        $account2 = new Account($validator);
 
         $transferTransaction = new Transaction(30);
 
@@ -125,12 +155,13 @@ class AccountTest extends TestCase
 
     public function testTransferWhenAnAccountHasSufficientMoneyShouldStoreTransactionsBothAccounts()
     {
-        $account1 = new Account();
+        $validator = new Validator();
+        $account1 = new Account($validator);
         $depositTransaction = new Transaction(100);
 
         $account1->deposit($depositTransaction);
 
-        $account2 = new Account();
+        $account2 = new Account($validator);
         $transferTransaction = new Transaction(30);
 
         $account1->transfer($account2, $transferTransaction);
@@ -142,7 +173,5 @@ class AccountTest extends TestCase
         $this->assertEquals(2,count($account1->getTransactions()));
         $this->assertEquals(1,count($account2->getTransactions()));
     }
-
-
 }
 

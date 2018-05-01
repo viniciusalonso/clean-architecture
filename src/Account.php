@@ -6,9 +6,11 @@ class Account
 {
     private $currentBalance;
     private $transactions;
+    private $validator;
 
-    public function __construct()
+    public function __construct(Validator $validator)
     {
+        $this->validator = $validator;
         $this->currentBalance = 0; 
         $this->transactions = [];
     }
@@ -20,10 +22,7 @@ class Account
 
     public function deposit(Transaction $transaction) : void
     {
-        if ($transaction->getValue() <= 0) {
-          throw new  \InvalidArgumentException('The value should be greater than zero');
-        }
-
+        $this->validator->isValueGreaterThanZero($transaction);
         $this->sumCurrentBalance($transaction);
     }
 
@@ -34,11 +33,7 @@ class Account
 
     public function withdraw(Transaction $transaction) : void
     {
-
-        if ($transaction->getValue() > $this->currentBalance) {
-          throw new \InvalidArgumentException('The value should be less than the current balance');
-        }
-
+        $this->validator->hasAccountBalanceEnough($transaction, $this);
         $this->subtractCurrentBalance($transaction);
     }
 
@@ -61,10 +56,7 @@ class Account
 
     public function transfer(Account $account, Transaction $transaction) : void
     {
-        if ($transaction->getValue() > $this->currentBalance) {
-          throw new \InvalidArgumentException('The value should be less than the current balance');
-        }
-
+        $this->validator->hasAccountBalanceEnough($transaction, $this);
         $this->subtractCurrentBalance($transaction);
         $account->sumCurrentBalance($transaction);
     }
