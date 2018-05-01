@@ -24,8 +24,7 @@ class Account
           throw new  \InvalidArgumentException('The value should be greater than zero');
         }
 
-        $this->currentBalance += $transaction->getValue();
-        $this->addTransaction($transaction);
+        $this->sumCurrentBalance($transaction);
     }
 
     public function addTransaction(Transaction $transaction) : void
@@ -37,11 +36,10 @@ class Account
     {
 
         if ($transaction->getValue() > $this->currentBalance) {
-          throw new   \InvalidArgumentException('The value should be less than the current balance');
+          throw new \InvalidArgumentException('The value should be less than the current balance');
         }
 
-        $this->currentBalance -= $transaction->getValue();
-        $this->addTransaction($transaction);
+        $this->subtractCurrentBalance($transaction);
     }
 
     public function getTransactions() : array
@@ -49,21 +47,25 @@ class Account
         return $this->transactions;
     }
 
-    public function  sumBalance(Transaction $transaction) : void
+    public function  sumCurrentBalance(Transaction $transaction) : void
     {
         $this->currentBalance += $transaction->getValue();
+        $this->addTransaction($transaction);
+    }
+
+    public function  subtractCurrentBalance(Transaction $transaction) : void
+    {
+        $this->currentBalance -= $transaction->getValue();
+        $this->addTransaction($transaction);
     }
 
     public function transfer(Account $account, Transaction $transaction) : void
     {
-
         if ($transaction->getValue() > $this->currentBalance) {
-          throw new   \InvalidArgumentException('The value should be less than the current balance');
+          throw new \InvalidArgumentException('The value should be less than the current balance');
         }
-        $this->currentBalance -= $transaction->getValue();
-        $account->sumBalance($transaction);
 
-        $this->addTransaction($transaction);
-        $account->addTransaction($transaction);
+        $this->subtractCurrentBalance($transaction);
+        $account->sumCurrentBalance($transaction);
     }
 }

@@ -69,6 +69,7 @@ class AccountTest extends TestCase
 
         $account->deposit($transaction);
         $this->assertContains($transaction, $account->getTransactions());
+        $this->assertEquals(1, count($account->getTransactions()));
     }
 
 
@@ -80,7 +81,9 @@ class AccountTest extends TestCase
 
         $account->deposit($depositTransaction);
         $account->withdraw($withdrawTransaction);
+
         $this->assertContains($withdrawTransaction, $account->getTransactions());
+        $this->assertEquals(2, count($account->getTransactions()));
     }
 
 
@@ -128,14 +131,16 @@ class AccountTest extends TestCase
         $account1->deposit($depositTransaction);
 
         $account2 = new Account();
-
         $transferTransaction = new Transaction(30);
 
         $account1->transfer($account2, $transferTransaction);
 
-
         $this->assertContains($transferTransaction, $account1->getTransactions());
         $this->assertContains($transferTransaction, $account2->getTransactions());
+
+
+        $this->assertEquals(2,count($account1->getTransactions()));
+        $this->assertEquals(1,count($account2->getTransactions()));
     }
 
 
