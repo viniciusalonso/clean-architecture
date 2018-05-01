@@ -28,7 +28,7 @@ class Account
         $this->addTransaction($transaction);
     }
 
-    private function addTransaction(Transaction $transaction) : void
+    public function addTransaction(Transaction $transaction) : void
     {
         $this->transactions[] = $transaction;
     }
@@ -47,5 +47,23 @@ class Account
     public function getTransactions() : array
     {
         return $this->transactions;
+    }
+
+    public function  sumBalance(Transaction $transaction) : void
+    {
+        $this->currentBalance += $transaction->getValue();
+    }
+
+    public function transfer(Account $account, Transaction $transaction) : void
+    {
+
+        if ($transaction->getValue() > $this->currentBalance) {
+          throw new   \InvalidArgumentException('The value should be less than the current balance');
+        }
+        $this->currentBalance -= $transaction->getValue();
+        $account->sumBalance($transaction);
+
+        $this->addTransaction($transaction);
+        $account->addTransaction($transaction);
     }
 }

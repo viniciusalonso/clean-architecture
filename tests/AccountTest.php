@@ -84,5 +84,60 @@ class AccountTest extends TestCase
     }
 
 
+    public function testTransferWhenAnAccountHasSufficientMoneyShouldTransferToOtherAccount()
+    {
+        $account1 = new Account();
+        $depositTransaction = new Transaction(100);
+
+        $account1->deposit($depositTransaction);
+
+        $account2 = new Account();
+
+        $transferTransaction = new Transaction(60);
+
+        $account1->transfer($account2, $transferTransaction);
+
+        $this->assertEquals(40, $account1->getCurrentBalance());
+        $this->assertEquals(60, $account2->getCurrentBalance());
+    }
+
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedMessage    The value should be less than the current balance
+     **/
+    public function testTransferWhenAnAccountHasNotSufficientMoneyShouldThrowAnException()
+    {
+        $account1 = new Account();
+        $depositTransaction = new Transaction(10);
+
+        $account1->deposit($depositTransaction);
+
+        $account2 = new Account();
+
+        $transferTransaction = new Transaction(30);
+
+        $account1->transfer($account2, $transferTransaction);
+    }
+
+    public function testTransferWhenAnAccountHasSufficientMoneyShouldStoreTransactionsBothAccounts()
+    {
+        $account1 = new Account();
+        $depositTransaction = new Transaction(100);
+
+        $account1->deposit($depositTransaction);
+
+        $account2 = new Account();
+
+        $transferTransaction = new Transaction(30);
+
+        $account1->transfer($account2, $transferTransaction);
+
+
+        $this->assertContains($transferTransaction, $account1->getTransactions());
+        $this->assertContains($transferTransaction, $account2->getTransactions());
+    }
+
+
 }
 
