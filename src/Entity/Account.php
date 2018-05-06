@@ -9,13 +9,13 @@ class Account
 
     public function __construct()
     {
-        $this->currentBalance = 0; 
+        $this->currentBalance = 0;
         $this->transactions = [];
     }
 
     public function getCurrentBalance() : int
     {
-        return $this->currentBalance; 
+        return $this->currentBalance;
     }
 
     public function addTransaction(Transaction $transaction) : void
@@ -28,16 +28,15 @@ class Account
         return $this->transactions;
     }
 
-    public function  sumCurrentBalance(Transaction $transaction) : void
+    public function sumCurrentBalance(Transaction $transaction) : void
     {
         $this->currentBalance += $transaction->getValue();
         $this->addTransaction($transaction);
     }
 
-    public function  subtractCurrentBalance(Transaction $transaction) : void
+    public function subtractCurrentBalance(Transaction $transaction) : void
     {
         $this->currentBalance -= $transaction->getValue();
         $this->addTransaction($transaction);
     }
-
 }

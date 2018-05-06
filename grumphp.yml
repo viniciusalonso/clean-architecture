@@ -3,4 +3,5 @@ parameters:
     bin_dir: vendor/bin
     tasks:
         phpunit: .
-        phpcs: --standard=PSR2 src tests
+        phpcs:
+            standard: PSR2

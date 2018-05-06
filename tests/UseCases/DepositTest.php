@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\UseCases;
+
 use PHPUnit\Framework\TestCase;
 use Bank\UseCases\Deposit;
 
@@ -32,4 +34,3 @@ class DepositTest extends TestCase
         $deposit->deposit();
     }
 }
-

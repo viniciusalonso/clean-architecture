@@ -14,8 +14,7 @@ class Validator
     public function hasAccountBalanceEnough(Transaction $transaction, Account $account) : void
     {
         if ($transaction->getValue() > $account->getCurrentBalance()) {
-          throw new \InvalidArgumentException('The value should be less than the current balance');
+            throw new \InvalidArgumentException('The value should be less than the current balance');
         }
     }
-
 }

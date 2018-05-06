@@ -15,5 +15,4 @@ class Transaction
     {
         return $this->value;
     }
-
 }

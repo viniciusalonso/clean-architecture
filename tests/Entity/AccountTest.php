@@ -1,4 +1,5 @@
 <?php
+namespace Tests\Entity;
 
 use PHPUnit\Framework\TestCase;
 use Bank\Entity\Account;
@@ -71,4 +72,3 @@ class AccountTest extends TestCase
         $this->assertEquals(1, count($account->getTransactions()));
     }
 }
-

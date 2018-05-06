@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\UseCases\WithdrawTest;
+
 use PHPUnit\Framework\TestCase;
 use Bank\Entity\Validator;
 use Bank\Entity\Account;
@@ -22,7 +24,6 @@ class WithdrawTest extends TestCase
 
         $withdrawService = new Withdraw($account->reveal(), $transaction->reveal(), $validator->reveal());
         $resultAccount = $withdrawService->withdraw();
-
     }
 
     /**
@@ -39,11 +40,10 @@ class WithdrawTest extends TestCase
 
         $exceptionMessage = 'The value should be less than the current balance';
         $validator = $this->prophesize(Validator::class);
-        $validator->hasAccountBalanceEnough($transaction, $account)->will($this->throwException(new \InvalidArgumentException()));
+        $validator->hasAccountBalanceEnough($transaction, $account)
+            ->will($this->throwException(new \InvalidArgumentException()));
 
         $withdrawService = new Withdraw($account->reveal(), $transaction->reveal(), $validator->reveal());
         $resultAccount = $withdrawService->withdraw();
     }
-
 }
-

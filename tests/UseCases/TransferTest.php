@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\UseCases;
+
 use PHPUnit\Framework\TestCase;
 use Bank\Entity\Account;
 use Bank\Entity\Validator;
@@ -21,12 +23,12 @@ class TransferTest extends TestCase
         $validator->hasAccountBalanceEnough($transaction, $accountOne)->shouldBeCalled();
 
         $accountTwo = $this->prophesize(Account::class);
-        $accountTwo->sumCurrentBalance($transaction)->shouldBeCalled(); 
+        $accountTwo->sumCurrentBalance($transaction)->shouldBeCalled();
 
         $transferService = new Transfer(
             $accountOne->reveal(),
             $accountTwo->reveal(),
-            $transaction->reveal(), 
+            $transaction->reveal(),
             $validator->reveal()
         );
         $transferService->transfer();
@@ -46,26 +48,20 @@ class TransferTest extends TestCase
 
         $validator = $this->prophesize(Validator::class);
         $validator->hasAccountBalanceEnough(
-            $transaction->reveal(), 
+            $transaction->reveal(),
             $accountOne->reveal()
         )->will($this->throwException(new \InvalidArgumentException()));
 
         $accountTwo = $this->prophesize(Account::class);
-        $accountTwo->sumCurrentBalance($transaction->reveal()); 
+        $accountTwo->sumCurrentBalance($transaction->reveal());
 
         $transferService = new Transfer(
             $accountOne->reveal(),
             $accountTwo->reveal(),
-            $transaction->reveal(), 
+            $transaction->reveal(),
             $validator->reveal()
         );
 
         $transferService->transfer();
     }
-
 }
-
-
-
-        
-

@@ -1,19 +1,23 @@
-<?php 
+<?php
 namespace Bank\UseCases;
 
 use Bank\Entity\Account;
 use Bank\Entity\Transaction;
 use Bank\Entity\Validator;
 
-class Transfer 
+class Transfer
 {
     private $accountOne;
     private $accountTwo;
     private $transaction;
     private $validator;
 
-    public function __construct(Account $accountOne, Account $accountTwo, Transaction $transaction, Validator $validator)
-    {
+    public function __construct(
+        Account $accountOne,
+        Account $accountTwo,
+        Transaction $transaction,
+        Validator $validator
+    ) {
         $this->accountOne = $accountOne;
         $this->accountTwo = $accountTwo;
         $this->transaction = $transaction;
@@ -27,5 +31,3 @@ class Transfer
         $this->accountTwo->sumCurrentBalance($this->transaction);
     }
 }
-
-

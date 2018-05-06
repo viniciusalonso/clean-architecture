@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Entity;
+
 use PHPUnit\Framework\TestCase;
 use Bank\Entity\Validator;
 use Bank\Entity\Transaction;

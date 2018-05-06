@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Entity;
+
 use PHPUnit\Framework\TestCase;
 
 class TransactionTest extends TestCase
@@ -10,4 +12,3 @@ class TransactionTest extends TestCase
         $this->assertEquals(14.09, $transaction->getValue());
     }
 }
-
