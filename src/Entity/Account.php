@@ -13,7 +13,7 @@ class Account
         $this->transactions = [];
     }
 
-    public function getCurrentBalance()
+    public function getCurrentBalance() : int
     {
         return $this->currentBalance; 
     }
@@ -21,12 +21,6 @@ class Account
     public function addTransaction(Transaction $transaction) : void
     {
         $this->transactions[] = $transaction;
-    }
-
-    public function withdraw(Transaction $transaction) : void
-    {
-        $this->validator->hasAccountBalanceEnough($transaction, $this);
-        $this->subtractCurrentBalance($transaction);
     }
 
     public function getTransactions() : array
@@ -46,10 +40,4 @@ class Account
         $this->addTransaction($transaction);
     }
 
-    public function transfer(Account $account, Transaction $transaction) : void
-    {
-        $this->validator->hasAccountBalanceEnough($transaction, $this);
-        $this->subtractCurrentBalance($transaction);
-        $account->sumCurrentBalance($transaction);
-    }
 }
